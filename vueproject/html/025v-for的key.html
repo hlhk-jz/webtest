@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        h3{
+
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="../js/vue.min.js"></script>
+<script>
+    Vue.component('cxf',{
+        template:`<div>
+      <h3>{{ obj.id }}</h3>
+      <h3>{{ obj.name }}</h3>
+      <h3>{{ obj.age }}</h3>
+</div>`,
+        props:{
+            obj:Object
+        }
+    })
+
+    var sky={
+        template: `<div>
+    <cxf v-for="(item,index) in user" :obj="item"></cxf>
+</div>`,
+        data(){
+            return{
+                user:[
+                    {"id":1,"name":"王五","age":"22"},
+                    {"id":2,"name":"赵六","age":"22"},
+                    {"id":3,"name":"唐山","age":"22"}
+                    ]
+            }
+        }
+    }
+
+    new Vue({
+        el:'#app',
+        template:`<div>
+<sky></sky>
+</div>`,
+        components:{
+            sky
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         *  axios：异步发送 http 服务的一个插件，类似 jquery 的
+         *         ajax 实现异步调用的一种插件，它是基于 promise
+         *         的 HTTP 库
+         *  使用案例：创建用户列表路由点击时在加载用户列表组件的时候
+         *            使用 axios 发送请求用户信息
+         */
+    </script>
+</head>
+<body>
+<div id="app"></div>
+<script src="../js/vue-router.js"></script>
+<script src="../js/vue.min.js"></script>
+<script src="../js/axios.js"></script>
+
+<script>
+    //把 axios 挂载到 vue 的prototype 上,全局都可以使用了，使用方式是 this.$axios
+    Vue.prototype.$axios=axios;
+
+    var User={
+        template:`<div>
+    <button @click="sent">点击请求</button>
+<ul>
+       <li v-for="(item,index) in users">
+          <h1>{{ index }}</h1>
+          <h1>{{ item.id }}</h1>
+          <h1>{{ item.name }}</h1>
+          <h1>{{ item.age }}</h1>
+          <h1>{{ item.home }}</h1>
+      </li>
+</ul>
+</div>`,
+        data(){
+          return{
+              users:[]
+          }
+        },
+        methods:{
+            sent:function () {
+                // get 请求方式，在 api 中还要 post 和 合并请求等
+                this.$axios.get('http://localhost:4554/user/list')
+                    .then(res=>{
+                        //成功
+                        console.log(res)
+                        this.users=res.data;
+                        console.log( this.users)
+                    })
+                    .catch(err=>{
+                        //失败
+                        console.log(err)
+                    })
+            }
+        }
+    };
+
+    Vue.use(VueRouter);
+    var router=new VueRouter({
+        routes:[
+            {
+                path:'/user',
+                component:User
+            }
+        ]
+    });
+
+    var sky={
+        template: `<div>
+          <router-link to="/user">用户列表</router-link>
+          <router-view></router-view>
+</div>`
+    }
+
+    new Vue({
+        el:'#app',
+        router,router,
+        template:`<div>
+ <sky></sky>
+</div>`,
+        components:{
+            sky
+        }
+    })
+</script>
+</body>
+</html>

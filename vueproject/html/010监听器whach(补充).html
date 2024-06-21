@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+</head>
+
+<body>
+<div id = "app">
+    <p style = "font-size:25px;">计数器: {{ counter }}</p>
+    <!--<button @click = "counter++" style = "font-size:25px;">点我</button>-->
+    <button @click = "show()">点我</button>
+</div>
+
+<script type = "text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            counter: 1
+        },
+        methods:{
+            show() {
+                vm.$data.counter ++;
+            }
+        }
+    });
+    //监听属性 watch，我们可以通过 watch 来响应数据的变化
+    //在Vue内部的 watch 方法,如果在外部使用就得加上 $ 符号。在new Vue 使用里面的属性等也需要加$，比如 vm.$el  vm.$data.conter
+  /*  vm.$watch("counter", function(nval, oval) {
+        alert('计数器值的变化 :' + oval + ' 变为 ' + nval + '!');
+    });*/
+  //监听 counter 属性，当该值变化后就会执行
+  //可以使用lambda表达式， 接收一个改变后的值和旧值
+    vm.$watch('counter', (ne,ol) => {
+        console.log(ol+"======= "+ne)
+    });
+   /* vm.$watch('counter', () => {
+        console.log("======= ")
+    });*/
+</script>
+</body>
+</html>

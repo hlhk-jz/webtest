@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../js/vue.min.js"></script>
+    <style>
+        .root {
+            background-color: lightcoral;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .line {
+            position: relative;
+        }
+        .ball {
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 50%;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model.number="num" />
+    <hr />
+    <br />
+    <br />
+    <br />
+    <br />
+    <slider
+            v-model.number="num"
+            width="400"
+            height="40"
+            :line-width="350"
+            :line-height="3"
+            :ball-size="15"
+    ></slider>
+    <br />
+    <br />
+    <slider
+            v-model.number="num"
+            width="600"
+            height="80"
+            line-background="blue"
+            :line-width="550"
+            :line-height="5"
+            ball-background="red"
+            :ball-size="20"
+    ></slider>
+</div>
+
+<template id="slider">
+    <div
+            class="root"
+            :style="rootStyle"
+            @mousedown="ballMouseDown"
+            @mousemove="ballMouseMove"
+            @mouseup="ballMouseUp"
+            @mouseleave="ballMouseLeave"
+    >
+        <div ref="line" class="line" :style="lineStyle">
+            <div ref="ball" class="ball" :style="ballStyle"></div>
+        </div>
+    </div>
+</template>
+
+<script>
+    let slider = {
+        template: "#slider",
+        data() {
+            return {
+                isdown: false, // 记录鼠标是否被按下。
+            };
+        },
+        props: {
+            value: Number,
+            width: String,
+            height: String,
+            lineBackground: {
+                type: String,
+                default: "lightgray",
+            },
+            lineWidth: {
+                type: Number,
+            },
+            lineHeight: {
+                type: Number,
+            },
+            ballBackground: {
+                type: String,
+                default: "yellow",
+            },
+            ballSize: {
+                type: Number,
+                default: 40,
+            },
+        },
+        methods: {
+            ballMouseDown(e) {
+                this.isdown = true;
+                this.ballMove(e);
+            },
+            ballMouseMove(e) {
+                if (this.isdown) {
+                    this.ballMove(e);
+                }
+            },
+            ballMouseUp() {
+                this.isdown = false;
+                console.log("鼠标松开");
+            },
+            ballMouseLeave() {
+                if (this.isdown) {
+                    this.isdown = false;
+                    console.log("鼠标离开组件");
+                }
+            },
+            ballMove(e) {
+                let distance = e.clientX - this.$refs.line.offsetLeft;
+                if (distance < 0) {
+                    distance = 0;
+                } else if (distance > this.lineWidth) {
+                    distance = this.lineWidth;
+                }
+
+                // 操作DOM的方式改变小球left
+                // this.$refs.ball.style.left = distance + "px";
+
+                // 通过计算属性的方式改变小球left
+                this.$emit("input", (distance / this.lineWidth).toFixed(2));
+            },
+        },
+        computed: {
+            rootStyle() {
+                return {
+                    width: this.width + "px",
+                    height: this.height + "px",
+                };
+            },
+            lineStyle() {
+                return {
+                    width: this.lineWidth + "px",
+                    height: this.lineHeight + "px",
+                    backgroundColor: this.lineBackground,
+                };
+            },
+            ballStyle() {
+                let left = 0;
+                if (this.value > 1) {
+                    left = 1 * this.lineWidth;
+                } else if (this.value < 0) {
+                    left = 0 * this.lineWidth;
+                } else {
+                    left = this.value * this.lineWidth;
+                }
+                return {
+                    width: this.ballSize + "px",
+                    height: this.ballSize + "px",
+                    backgroundColor: this.ballBackground,
+                    marginTop: -this.ballSize / 2 + "px",
+                    marginLeft: -this.ballSize / 2 + "px",
+                    left: left + "px",
+                };
+            },
+        },
+    };
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            num: 0,
+        },
+        methods: {},
+        components: {
+            slider,
+        },
+    });
+</script>
+</body>
+</html>

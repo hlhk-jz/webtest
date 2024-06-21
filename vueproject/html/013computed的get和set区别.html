@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .activ{
+            background-color: #606266;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <audio :src="showwnu" autoplay controls></audio>
+    <ul>
+        <li v-for="(item,index) in music" :class="{activ:muindex==index}" @click="mufunct(index)">
+            <h3>{{ item.id}}-歌名:{{ item.name }}</h3>
+            <p>歌手：{{ item.author }}</p>
+        </li>
+    </ul>
+
+</div>
+<script src="../js/vue.min.js"></script>
+<script>
+    var music=[
+        {id:1,name:'夹子道 - 绝恋帝女花',author:'夹子道',msrc:'../mp3/夹子道 - 绝恋帝女花.flac'},
+        {id:2,name:'李九鸣 - 没资格说爱我',author:'李九鸣',msrc:'../mp3/李九鸣 - 没资格说爱我.flac'},
+        {id:3,name:'柳爽 - 大器晚成',author:'柳爽',msrc:'../mp3/柳爽 - 大器晚成.flac'},
+        {id:4,name:'陈雪凝 - 你的酒馆对我打了烊',author:'陈雪凝',msrc:'../mp3/陈雪凝 - 你的酒馆对我打了烊.flac'},
+        {id:5,name:'雷诺儿 - 别在我离开之前离开',author:'雷诺儿',msrc:'../mp3/雷诺儿 - 别在我离开之前离开.flac'},
+        {id:6,name:'顾峰、斯琴高丽 - 猜',author:'顾峰',msrc:'../mp3/顾峰、斯琴高丽 - 猜.flac'},
+    ]
+    /**    computed 可以监听多个属性，合理使用会非常方便，案例监听音乐的路径，路径发生改变
+     *     就会从新执行 return
+     */
+    new Vue({
+        el:'#app',
+        data(){
+            return{
+                music:music,
+                muindex:0
+            }
+        },
+        computed: {
+            /**
+             * showwnu:function(){} 这种方式默认是 get 的方式
+             * 其实直接就使用这种 get 方式即可，它默认直接调用的
+             * get 方法
+             */
+          /*  showwnu:function () {
+                return this.music[this.muindex].msrc
+            }*/
+
+
+
+
+            /**
+             * 演示切换歌曲点击事件返回的歌曲路径的 set 的方式
+             * 只要点击哪个歌曲，就会在下面的 mufunct 方法中调用
+             * showwnu 的 set 方法，并且设置返回点击的歌曲路径
+             */
+            showwnu:{
+                set:function (newv) {
+                    console.log(newv)
+                    this.muindex=newv
+                },
+                get:function () {
+                    return this.music[this.muindex].msrc
+                }
+            }
+
+        },
+        methods:{
+            mufunct:function (index) {
+               /* this.muindex=index*/
+
+                //演示computed set 方式,它此时调用了showwnu 的 set 方法
+                this.showwnu=index;
+            }
+        }
+    })
+</script>
+</body>
+</html>

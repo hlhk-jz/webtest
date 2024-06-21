@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**缓存：案例是有两个路由菜单，水果，与电气，为水果内容添加点击事件
+         *       点击后让内容变为红色，然后切换路由菜单到电气，在回来让水果
+         *       内容的红色状态还存在
+         * 问题：当我们点击水果内容后内容就变成了红色，切换别的路由组件在切换回来
+         *       红色却不在了，是因为切换别的那么这个组件就被销毁了，解决办法是
+         *       使用 <keep-alive> 标签把渲染标签 <router-view> 包裹起来，作用是
+         *       缓存到内存中，销毁的钩子函数就不会执行了，会变成停用或者启用，在
+         *       开发中根据实际项目进行应用
+         *
+         */
+    </script>
+</head>
+<body>
+   <div id="app">
+       <router-link to="/shuiguo">水果</router-link>
+       <router-link to="/dianqi">电气</router-link>
+       <router-view></router-view>
+   </div>
+  <script src="../js/vue.min.js"></script>
+<script src="../js/vue-router.js"></script>
+<script>
+    var shuiguo={
+        template:`<div>
+<h2 @click="show">我是水果内容</h2>
+</div>`,
+        methods:{
+            //target: h2 当点击事件触发方法时，我们可以在方法中添加一个e参数，它的 target 属性就是调用者对象
+            show:function (e) {
+                console.log(e)
+               e.target.style.color='red';
+            }
+        }
+    };
+    var dianqi={
+        template: `<div>我是电气内容</div>`
+    };
+    Vue.use(VueRouter);
+    var router=new VueRouter({
+        routes:[
+            {
+                path:'/shuiguo',
+                component:shuiguo
+            },
+            {
+                path:'/dianqi',
+                component:dianqi
+            }
+        ]
+    });
+
+    new Vue({
+        el:'#app',
+        router,router
+    })
+</script>
+</body>
+</html>

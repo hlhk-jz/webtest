@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+      <div id="app"></div>
+
+      <script src="../js/vue.min.js"></script>
+      <script>
+          new Vue({
+              el:'#app',
+              template:`<div>
+            <input type="text"  v-model="hh"/>
+            <h1>{{ hh }}</h1>
+                        </div>`,
+              data:function (){
+                  return{
+                      hh:''
+                  }
+              },
+              //监听 hh 属性，参数1是输入的新值，参数2是旧值
+              watch:{
+                  hh:function (news,jius) {
+                      //console.log(news,jius)
+                      //判断新值为'xxx' 然后就在控制台打印
+                      if(news === 'xxx'){
+                          console.log('xxx出来了！！！')
+                      }
+                  }
+              }
+          })
+      </script>
+</body>
+</html>

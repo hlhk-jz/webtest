@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         * 权限控制： 比如我们在网站上有的路由组件中被游客点到了，我们在组件上
+         *           提示登录，如果登录了就不用提示，在route 路由中给我们提供
+         *           了路由元信息来进行权限校验
+         * 案例：页面上有 首页，我的博客，登录，退出 几个路由菜单，当点击我的博客
+         *       时页面上显示登录提示信息，我们登录后进入到我的博客
+         *  1. 创建组件
+         *  2. 配置路由信息，注意在配置我的博客的路由的时候，我们在
+         *     里面添加一个 meta 的属性，它是用来给未来组件做权限
+         *     控制的，是全局守卫,我们在 router API 中找到导航守卫，
+         *     里面提供了很多的类似钩子函数的方法，我们找在进入组件
+         *     之前的函数
+         *  3. 编写导航守卫中进入组件前执行的方法中的逻辑，因为我们
+         *     把用户登录信息存在了 localStarg 中了，所以我们校验
+         *     里面的 user 信息是否为空等等
+         *  4. 为登录按钮添加点击事件，然后在触发的方法中使用编程式
+         *     导航来动态的进入我的博客路由组件中，之前我们使用的都是
+         *     声明式路由都是固定的写好了，而编程式路由我们通过
+         *     this.$router.push({}) 方法可以动态的设置路由信息并
+         *     进入匹配的组件中
+         *  5. 退出添加事件，清除 localstarg 中的用户信息，然后使用
+         *     编程式路由到登录组件
+         */
+    </script>
+</head>
+<body>
+    <div id="app">
+        <router-link to="/home">首页</router-link>
+        <router-link to="/lock">我的博客</router-link>
+        <router-link to="/login">登录</router-link>
+       <a href="#" @click="ext">退出</a>
+        <router-view></router-view>
+    </div>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-router.js"></script>
+    <script>
+        //创建首页路由组件
+        var home={
+            template: `
+              <div>我是首页内容</div>
+            `
+        }
+        //创建登录路由组件
+        var login={
+            template: `
+            <div>
+            用户：<input type="text" name="name" v-model="name"/><br/>
+            密码：<input type="password" name="password" v-model="password"/><br>
+            <input type="button" value="登录" @click="loginmethod"/>
+</div>
+            `,
+            methods:{
+                loginmethod:function () {
+                    localStorage.setItem("user",{"name":this.name,'password':this.password});
+                    //登录后进入我的博客，我们使用编程式导航，之前我们用的都是声明式导航
+                    this.$router.push({name:'lock'}) //我们还可以用 path:'' 等等
+                }
+            },
+            data(){
+                return{
+                    name:'',
+                    password:''
+                }
+            }
+        };
+        //创建我的博客组件
+        var lock={
+            template:`<div>我的博客</div>`
+        }
+        //创建路由对象
+        var router=new VueRouter({
+            routes:[
+                {
+                    path:'/',
+                   redirect:'/home'
+                },
+                {
+                    path:'/home',
+                    component:home
+                },
+                {
+                    path:'/lock',
+                    name:'lock',
+                    component:lock,
+                    //meta 是给未来组件做权限控制用的，是全局守卫
+                    meta:{
+                        //表明用户访问该组件的时候需要提示登录
+                       auth:true
+                    }
+                },
+                {
+                    path:'/login',
+                    component:login
+                }
+            ]
+        });
+        //全局守卫 - 前置守卫，就是说在进入组件之前调用
+        router.beforeEach((to, from, next) => {
+            //首先我们获取我的博客中的 auth 属性是否是 true ，是就需要登录，反之放行，因为别的组件不需要登录
+            if(to.meta.auth){
+                //判断 localstarg 是否有用户登录信息有放行
+                if(localStorage.getItem('user')){
+                    //放行
+                    next()
+                }else{
+                    //需要登录，使用 next( path:'') 跳转到登录组件,也可以使用name属性但需要声明
+                    //next() 放行的意思，但是我们不能放行到我的博客组件，应该放行到登录组件，需要进行登录
+                    next({
+                        path:'/login'
+                    })
+                }
+            }
+            next();
+
+        });
+        //让vue使用 vueRouter
+        Vue.use(VueRouter);
+        //实例化 vue
+        new Vue({
+            el:'#app',
+            router,
+            methods:{
+                ext:function () {
+                   localStorage.removeItem('user');
+                   this.$router.push({name:'/login'})
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>

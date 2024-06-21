@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app"></div>
+
+<!--引入 vue.js-->
+<script src="../js/vue.min.js"></script>
+<!--引入 vue-router.js-->
+<script src="../js/vue-router.js"></script>
+
+<script>
+    /**  两种动态路由参数演示
+     *
+     * 关于地址栏的路由范式有两种,是 router定义好的
+     * 1. xxx.html#/user/1     这种是 params
+     * 2. kkk.html#/user?id=1  这种是 query
+     *
+     * $route :在 vue-router 中它把 VueRouter 整个对象绑定到了 $route 里，所以我们用this.$route可以操作一些
+     *         vue-router.js 中的一些方法
+     */
+    //让vue使用该 vueRouter创建
+    Vue.use(VueRouter);
+
+    //创建 Login登录 组件
+    var Login={
+        template: `<div>
+<h1>我是用户1</h1>
+</div>`,
+        created(){
+            console.log(this.$route)
+        }
+    };
+
+    //创建 Zhuche注册 组件
+    var Zhuche={
+        template: `<div>
+    <h1>我是用户2</h1>
+</div>`,
+        created(){
+            console.log(this.$route)
+        }
+    };
+
+
+
+    //创建路由对象
+    var router = new VueRouter({
+        //配置路由对象
+        routes:[
+            {  path:'/login/:id',
+                name:'user',
+                component:Login
+            },
+            {  path:'/zhuche',
+                name:'logd',
+                component:Zhuche
+            }
+        ]
+    });
+
+    //组件
+    //query:{zhuce:2} 里面的zhuce 是任意起的  query方式
+    //params:{id:1}   里面的id 要和  path:'/login/:id'  中的 id 名称一致 params方式
+    var cxj={
+        template:`
+             <div>
+            <router-link :to="{name:'user',params:{id:1}}">用户1</router-link>
+            <router-link :to="{name:'logd',query:{zhuce:2}}">用户2</router-link>
+            <router-view></router-view>
+</div>
+            `
+    };
+    //实例化 vue
+    new Vue({
+        el:'#app',
+        router:router,
+        template:`
+            <div>
+            <cxj></cxj>
+    </div>`,
+        components:{
+            cxj
+        }
+    });
+</script>
+</body>
+</html>

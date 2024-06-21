@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app"></div>
+<script src="../js/vue.min.js"></script>
+<script>
+
+
+    var cxf={
+        template: `
+             <div>
+            <input type="text" v-show="isshow" ref="md"/>
+</div>
+            `,
+        data(){
+          return{
+              isshow: false
+          }
+        },
+
+        /**
+         * 案例：需求是首先在dom加载的时候input是隐藏的，等 dom 加载后
+         *       我们控制 isshow:true 让input显示，显示后让输入框获取
+         *       焦点  this.$refs.md.focus()
+         * 问题是：直接  this.$refs.md.focus() 是没有效果的，是因为我们因为使用
+         *        了 mounted 动态的操作了 input 的显示this.isshow=true;，这种
+         *        特殊情况的解决办法是我们需要使用 vue 提供的 $nextTick 函数
+         *        中来控制获取焦点
+         * $nextTick：是在DOM 更新循环结束之后执行的方法，也就是在我们动态的操纵
+         *            元素之后进行执行，所以我们可以在这个方法中类进行相应的功能
+         *             this.$nextTick(function () {
+         *                        this.$refs.md.focus();
+         *                   })
+         */
+        mounted:function () {
+            console.log("执行了")
+            this.isshow=true;
+            this.$nextTick(function () {
+                this.$refs.md.focus();
+            })
+        }
+    }
+
+    new Vue({
+        el:'#app',
+        template:`<div>
+                             <cxf></cxf>
+                       </div>`,
+        components:{
+            cxf
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         *  注意： 在表单中文件上传是通过 formdata 上传的，在data 中声明时是对象 files:{}
+         *         在方法中通过e.target.files[0] 获取到文件赋值给我们 data 中声明的对象，然后
+         *         点击上传时
+         */
+    </script>
+</head>
+<body>
+<div id="app"></div>
+<script src="../js/vue-router.js"></script>
+<script src="../js/vue.min.js"></script>
+<script src="../js/axios.js"></script>
+
+<script>
+    //把 axios 挂载到 vue 的prototype 上,全局都可以使用了，使用方式是 this.$axios
+    Vue.prototype.$axios=axios;
+
+    var File={
+        template:`<div>
+     文件上传：<input type="file" @change="fileupload"/>
+    <button @click="sent">上传</button>
+</div>`,
+        data(){
+            return{
+                files:{}
+            }
+        },
+        methods:{
+            sent:function () {
+                var formdata=new FormData();
+                formdata.append('file',this.files);
+                // post 请求方式文件上传
+                this.$axios.post('http://localhost:4554/user/file', {
+                    'file':formdata
+                    })
+                    .then(res=>{
+
+                    })
+                    .catch(err=>{
+
+                    })
+            },
+            fileupload:function (e) {
+              console.log(e.target.files[0])
+                this.files=e.target.files[0]
+            }
+        }
+    };
+
+    Vue.use(VueRouter);
+    var router=new VueRouter({
+        routes:[
+            {
+                path:'/file',
+                component:File
+            }
+        ]
+    });
+
+    var sky={
+        template: `<div>
+          <router-link to="/file">文件上传页面</router-link>
+          <router-view></router-view>
+</div>`
+    }
+
+    new Vue({
+        el:'#app',
+        router,router,
+        template:`<div>
+ <sky></sky>
+</div>`,
+        components:{
+            sky
+        }
+    })
+</script>
+</body>
+</html>

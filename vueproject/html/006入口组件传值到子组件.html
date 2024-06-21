@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+
+			.main{
+				width: 100%;
+			}
+			.head{
+				width: 100%;
+				height: 300px;
+				background-color: red;
+			}
+			.main2{
+				width: 100%;
+				height: 800px;
+			}
+			.main2 .sade{
+				width: 30%;
+				height: 100%;
+				background-color: green;
+				float: left;
+			}
+			.main2 .content{
+				width: 70%;
+				height: 100%;
+				background-color: hotpink;
+				float: right;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+		</div>
+		<!--
+			父组件传值到子组件：
+			        1.首先要在入口组件中挂载的子组件中绑定数据对象
+			        2.在子组件中通过 props 声明父组件中的数据对象，用于接收数据
+		-->
+		<script src="../js/vue.min.js"></script>
+		<script>
+
+			//全局组件定义,第一个参数是组件的名称,第二个参数是全局组件的样式，如果那个组件中用，挂载即可
+			Vue.component("show",{
+				template:`
+				   <div>
+				      <button>按钮</button>
+				   </div>
+				`
+			})
+
+
+			//内容区
+			var Vcontent={
+				template:`
+				  <div class="content">我是内容区
+				      <ul>
+				       <li v-for = '(item,index) in posts'>
+							<h3>{{item.title}}</h3>
+							<h4>{{item.content}}</h4>
+						</li>
+				      </ul>
+				  </div>
+				`,
+				props:['posts']
+			}
+
+
+			//侧边栏
+			var Vsade={
+				template:`
+				  <div class="sade">我是侧边栏</div>
+				`
+			}
+			//局部入口组件中的 heade自定义组件
+			var Vhead={
+				template:`
+				  <div class="head">我是头部组件</div>
+				`
+			}
+
+			var App={
+				template:`
+				    <div class="main">
+				       <Vhead />
+				       <div class="main2" >
+				         <Vsade />
+				         <Vcontent :posts = 'posts' />
+				       </div>
+				    </div>
+				`,
+				data(){
+					return{
+						posts:[
+					{id:1,title:"我的第一篇博客",content:'天王该帝王'},
+					{id:2,title:"我的第二篇博客",content:'小鸡炖蘑菇'},
+					{id:3,title:"我的第三篇博客",content:'宝塔镇河妖'}
+					  ]
+					}
+				},
+				components:{
+					Vhead,
+					Vsade,
+					Vcontent
+				}
+			};
+
+			new Vue({
+				el:'#app',
+				template:`<App></App>`,
+				data(){
+					return{
+
+					}
+				},
+				components:{
+					App
+				}
+			});
+		</script>
+	</body>
+</html>

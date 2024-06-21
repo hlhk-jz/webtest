@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Title</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <!--引入 vue.js-->
+    <script src="../js/vue.min.js"></script>
+    <!--引入 vue-router.js-->
+    <script src="../js/vue-router.js"></script>
+
+    <script>
+        /**
+         * 1. 首先引入vue和router的js
+         * 2. 让vue使用该 VueRouter创建，注意的是在vue-router.js最后是返回一个VueRouter的对象
+         * 3. 创建路由对象
+         * 4. 配置路由对象，在里面有个 routes 数组，数组中是路由的匹配规则，是以一个个
+         *    对象来表示的key:value，在对象里的 key value下面还有个 component:Login 组件,Login
+         *    是自定义的，然后我们在创建 Login 组件，当我们访问 /login 的时候就会加载 Login
+         *    组件了
+         * 5. 当我们使用了 VueRouter 对象后，它会抛出两个全局组件，我们把它们挂载起来
+         *     <router-link to='/login'>登录</router-link> //to 属性对应 path 路径
+         *     <router-view></router-view> //出口，用来显示我们组件内容的，//出口，打开f12检
+         *                                   查会发现会保留一个注释
+         *
+         *     注意这个错误： TypeError: Cannot read property 'matched' of undefined
+         *     这个错误时因为我们没有将 VueRouter 挂载到 vue 实例化对象中去，我们把创建
+         *     的 router路由对象 也就是 VueRouter 挂载好，直接在实例化的 vue 中添加如下：
+         *     router：router
+         *
+         *     为什么不用挂载登录和注册组件： 因为当我们点击访问 /login和/zhuche 的时候
+         *        就会对应 routes 中的 path 路径，然后就会加载 compenent 中的组件
+         *        然后就会把组件渲染到  router-view 出口组件中去
+         *
+         *     补充：我们可以给路由起个名称 name:'logd', 但是需要在 :to 进行绑定
+         *
+         */
+        //让vue使用该 vueRouter创建
+        Vue.use(VueRouter);
+
+        //创建 Login登录 组件
+        var Login={
+            template: `<div>
+<h1>我是登录页面</h1>
+</div>`
+            };
+
+        //创建 Zhuche注册 组件
+        var Zhuche={
+            template: `<div>
+    <h1>我是注册页面</h1>
+</div>`
+        };
+
+
+
+        //创建路由对象
+        var router = new VueRouter({
+            //配置路由对象
+            routes:[
+                {  path:'/login',
+                    name:'user',
+                    component:Login
+                },
+                {  path:'/zhuche',
+                    name:'logd',
+                    component:Zhuche
+                }
+            ]
+        });
+
+        //组件
+        var cxj={
+            template:`
+             <div>
+            <router-link :to="{name:'user'}">登录</router-link>
+            <router-link :to="{name:'logd'}">注册</router-link>
+            <router-view></router-view>
+</div>
+            `
+        };
+        //实例化 vue
+        new Vue({
+            el:'#app',
+            router:router,
+            template:`
+            <div>
+            <cxj></cxj>
+    </div>`,
+            components:{
+                cxj
+            }
+        });
+    </script>
+</body>
+</html>

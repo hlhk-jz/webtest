@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        /**
+         * 在Vue中，修饰符处理了许多DOM事件的细节，让我们不再需要花大量的时间去处理这些烦恼的事情，而能有更多的精力专注于程序的逻辑处理
+         vue中修饰符分为以下五种：
+         表单修饰符
+         事件修饰符
+         鼠标按键修饰符 比如 左键，右键，中键
+         键值修饰符 键盘修饰符是用来修饰键盘事件（onkeyup，onkeydown）的，keyCode存在很多，但vue为我们提供了别名，分为以下两种：
+         v-bind修饰符
+         写renturn和不写return的区别：
+         不使用return包裹的数据会在项目的全局可见，会造成变量污染 。
+         使用return包裹后数据中变量只在当前组件中生效，不会影响其他组件。使用return的data是一个方法
+         */
+    </script>
+    <style>
+        .test{
+            width:500px;height:300px;background: #dcdfe6;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <!--<input type="text" v-model.lazy="value">-->
+    <!--<input type="text" v-model.trim="value">-->
+   <!-- <input v-model.number="age" type="number">-->
+  <!--  事件冒泡如果子标签和父标签有相同事件，子事件出发父事件也会触发，@click.stop="shout11(1)可以阻止冒泡，只是当前标签事件触发父级不触发
+     <div @click="shout22(2)">
+        <button @click="shout11(1)">ok</button>
+    </div>-->
+    <!--<p>{{age}}</p>-->
+    <!--
+    @submit.prevent
+.prevent 表示提交以后不刷新页面，prevent是preventDefault,阻止标签默认行为，有些标签有默认行为，例如a标签的跳转链接属性href等。
+比如表单的 submit 提交后默认会刷新页面，通过  .prevent 就会阻止
+-->
+ <!--   <form :model="form" v-on:submit.prevent="onsubmit">
+        <button>Send</button>
+    </form>-->
+
+
+
+</div>
+<script src="../js/vue.min.js"></script>
+   <script>
+       var vm = new Vue({
+           el: "#app",
+           data: {
+                value:"",
+                age:null,
+                form:{}
+           },
+           methods:{
+               shout11(a){
+                 alert(a)
+               },
+               shout22(a){
+                   alert(a)
+               },
+               onsubmit(){
+                   alert("1111111")
+               },
+               tes(){
+                   alert("11111")
+               },
+               tes1(){
+                   alert("22222")
+               }
+           }
+       })
+   </script>
+</body>
+</html>

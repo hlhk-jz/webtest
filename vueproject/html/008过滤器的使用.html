@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<!--
+			局部过滤器：
+			1.首先在组件内部用，我们需要使用 filters:{过滤器的名称和函数},在函数里必须return
+			2.使用过滤器加上管道符 | 过滤器的名称
+			全局过滤器：
+		-->
+		<div id="app"></div>
+
+		<script src="../js/vue.min.js"></script>
+		<script>
+			var App={
+				template:`
+				  <div>
+				      <input type="text"  v-model="price"/>
+				      <h3>{{ price | shows }}</h3>
+				  </div>
+				`,
+				data(){
+					return{
+						price:""
+					}
+				},
+				filters:{
+					shows:function(value){
+						return "￥"+value
+					}
+				}
+
+			}
+
+			new Vue({
+				el:'#app',
+				components:{
+					App
+				},
+				template:`<App />`
+			});
+
+		</script>
+	</body>
+</html>

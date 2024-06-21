@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app"></div>
+
+<!--引入 vue.js-->
+<script src="../js/vue.min.js"></script>
+<!--引入 vue-router.js-->
+<script src="../js/vue-router.js"></script>
+
+<script>
+    /**  嵌套路由： 在单页面应用中，有些时候需要用到嵌套路由，
+     *              比如在一个 router-link router-view 中又
+     *              有一组路由，类似导航菜单，也就是在router-view
+     *              中嵌套着又是一组 router-link router-view
+     *              点击路由菜单只是刷新里面的  router-view
+     *
+     */
+    //让vue使用该 vueRouter创建
+    Vue.use(VueRouter);
+
+    //创建 Login登录 组件
+    var Login={
+        template: `<div>
+<h1>我是用户1</h1>
+</div>`,
+        created(){
+            console.log(this.$route)
+        }
+    };
+
+    //二级路由的 dianqi 组件
+    var dianqi={
+        template: `<div>
+    <h1>我是二级路由的电器内容</h1>
+</div>`,
+        created(){
+            console.log(this.$route)
+        }
+    };
+    //二级路由的 yinyue 组件
+    var yinyue={
+        template: `<div>
+    <h1>我是二级路由的音乐内容</h1>
+</div>`,
+        created(){
+            console.log(this.$route)
+        }
+    };
+
+    //一级路由点击 home 加载的这个组件，渲染到了一级的router-view 中
+    var home={
+        template: `
+        <div>
+            <h2>二级路由</h2><br/>
+                  <router-link :to="{name:'dianqi'}">电器</router-link>
+                  <router-link :to="{name:'yinyue'}">音乐</router-link>
+                  <router-view></router-view>
+        </div>
+        `
+    }
+
+    //创建路由对象
+    // children 是路由的子路由属性，在里面可以定义子路由  ，如下的子路由属于 home 组件的子路由
+    var router = new VueRouter({
+        //配置路由对象
+        routes:[
+            {  path:'/login',
+                name:'home',
+                component:home,
+                children:[
+                    {
+                        path:'/login/dianqi',
+                        name:'dianqi',
+                        component:dianqi
+                    },
+                    {
+                        path:'/login/yinyue',
+                        name:'yinyue',
+                        component:yinyue
+                    }
+                ]
+            }
+        ]
+    });
+
+    //组件
+    //query:{zhuce:2} 里面的zhuce 是任意起的  query方式
+    //params:{id:1}   里面的id 要和  path:'/login/:id'  中的 id 名称一致 params方式
+    var cxj={
+        template:`
+             <div>
+            <router-link :to="{name:'home'}">home</router-link>
+            <router-view></router-view>
+</div>
+            `
+    };
+    //实例化 vue
+    new Vue({
+        el:'#app',
+        router:router,
+        template:`
+            <div>
+            <cxj></cxj>
+    </div>`,
+        components:{
+            cxj
+        }
+    });
+</script>
+</body>
+</html>

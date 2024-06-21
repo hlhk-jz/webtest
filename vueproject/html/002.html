@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<!--
+			指令：
+			v-text 相当于js中的 innerText
+			v-html 相当于js中的 innerHTML
+			v-if   后面为true那么就显示，如果false就隐藏，切换开销比较大，如果元素不经常操作使用这个
+			v-show 或 none 也是控制元素显示和隐藏，如果元素经常操作使用它
+			v-else-if 多条件渲染
+			v-for 遍历,如果想要索引就把变量扩起来然后加上 index ，index就是索引从0开始
+			v-bind 绑定,给元素属性赋值，比如 class="xx"
+		-->
+		<div id="app"></div>
+		
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			new Vue({
+				el:'#app',
+				/*template:'<div v-text="msg"></div>',*/
+				/*template:'<div v-html="msg2"></div>',*/
+				/*template:'<div> <div v-if="isshow">哈哈哈</div> </div>',*/
+				template:`
+				<div>
+				   <ul>
+				      <li v-for="(item,index) in student">
+				         <h3>{{ index }}</h3>
+				         <h3>{{ item.name }}</h3>
+				      </li>
+				   </ul>
+				   
+				   <ul>
+				      <li v-for="(key,value) in user">
+				         {{ key }} -- {{ value }}
+				      </li>
+				   </ul>
+				</div>
+				`,
+				data:function(){
+					return{
+						msg:"你好",
+						msg2:"<h2>你好</h2>",
+						isshow:true,
+						<!--数组-->
+						student:[{id:1,name:'王五'},{id:2,name:'赵六'},{id:3,name:'唐山'}],
+						<!--对象-->
+						user:{id:33,name:'呵呵'}
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

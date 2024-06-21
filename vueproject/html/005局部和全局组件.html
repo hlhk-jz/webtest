@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+
+			.main{
+				width: 100%;
+			}
+			.head{
+				width: 100%;
+				height: 300px;
+				background-color: red;
+			}
+			.main2{
+				width: 100%;
+				height: 800px;
+			}
+			.main2 .sade{
+				width: 30%;
+				height: 100%;
+				background-color: green;
+				float: left;
+			}
+			.main2 .content{
+				width: 70%;
+				height: 100%;
+				background-color: hotpink;
+				float: right;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+		</div>
+		<!--
+			局部组件：  声子，挂子，用子
+			      1.首先还是要实例化 new Vue
+			      2.el 绑定根元素
+			      3.template 入口组件
+			      4.创建局部组件首先要声明一个局部组件
+			      5.挂载，把我们声明的局部组件挂载到 new Vue中的template里，挂载方法是在实例化的Vue中添加 compontens在里面挂载
+			               小提示，如果 key value是一样的话可以只写一个即可，是es6的写法，template中标签也可以写单闭合标签
+			      6.使用组件，在new Vue中的template中添加我们的局部入口组件
+			      7.在我们声明的局部组件中又会包含了一些头部组件，体组件等等自定义的一些组件，也就是布局上的一些组件
+			      8.把头部组件挂载到入口组件中
+			      9.接着在根据 7 8 步骤定义一些想要的布局组件，挂载到入口组件中
+			 全局组件：声明一个组件在任何一个组件中都可以使用
+		-->
+		<script src="../js/vue.min.js"></script>
+		<script>
+
+			//全局组件定义,第一个参数是组件的名称,第二个参数是全局组件的样式，如果那个组件中用，挂载即可
+			//如果在不同的组件中想要显示的按钮根据自定义的来显示，我们需要使用 <slot></slot> 元素作为承载分发
+			Vue.component("show",{
+				template:`
+				   <div>
+				      <button>按钮</button>
+				   </div>
+				`
+			})
+
+
+			//内容区
+			var Vcontent={
+				template:`
+				  <div class="content">我是内容区
+				     <show />
+				  </div>
+				`
+			}
+
+
+			//侧边栏
+			var Vsade={
+				template:`
+				  <div class="sade"><show />
+				  我是侧边栏</div>
+				`
+			}
+
+
+			//局部入口组件中的 heade自定义组件
+			var Vhead={
+				template:`
+				  <div class="head">我是头部组件</div>
+				`
+			}
+
+
+			//声明局部入口组件,这个局部组件可以看成是 new 的 vue中的所有属性，除了 el 别的都可以使用
+			//注意如果是组件，那么在data中必须是 return
+			var App={
+				template:`
+				    <div class="main">
+				       <Vhead />
+				       <div class="main2">
+				       <Vsade />
+				       <Vcontent />
+				       </div>
+				    </div>
+				`,
+				data(){
+					return{
+
+					}
+				},
+				components:{
+					Vhead,
+					Vsade,
+					Vcontent
+				}
+			};
+
+			new Vue({
+				el:'#app',
+				template:`<App></App>`,
+				data(){
+					return{
+
+					}
+				},
+				components:{
+					App
+				}
+			});
+		</script>
+	</body>
+</html>

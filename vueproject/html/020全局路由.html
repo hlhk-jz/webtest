@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * 1. 导入 router.js  和  vue.js
+     * 2. 实例化 vue
+     * 3. 创建id 为 app 的根标签
+     * 4. 挂载父组件 opp ，以及创建
+     * 5. 让 vue 使用 VueRouter     Vue.use(VueRouter);
+     * 6. 创建 VueRouter   创建名 router 是固定写法
+     * 7. 配置 VueRouter 中的路由参数 path ,name , component , children
+     * 8, 在实例化的 vue 中添加 router：router
+     * 9. 创建一级路由菜单组件
+     * 10.设置一级路由的 router-link router-view，至于在哪个组件自己定
+     * 11.在一级路由的组件中创建二级路由 outer-link router-view ，以及在一级
+     *    路由children中配置 path ... ，因为使用的是动态路由，所以在一级路由
+     *    的菜单组件中还要加上 params:{id:1},而且我们要用全局组件所以只创建
+     *    一个路由
+     * 12.创建二级路由组件
+     *
+     * 提醒：当我们使用路由参数比如由 /user/foo 到 /user/show 时，我们使用的是
+     *       同一个组件，比起销毁在创建复用比较优势，但是生命钩子函数却不在调用
+     *       了，在 router 中提供了两种方式来使用不同动态路由参数使用共同的组件
+     *       1. watch  我们通过监听 route 对象，然后根据 params.id 获取切换路由，
+     *          通常在这里获取路由，根据不同路由到后台获取数据
+     *       2. 导航守卫
+     */
+</script>
+
+<div id="app"></div>
+
+<script src="../js/vue.min.js"></script>
+<script src="../js/vue-router.js"></script>
+<script>
+    Vue.use(VueRouter);
+    //一级路由
+    var video ={
+        template:`
+         <div>我是一级路由电影内容 <br/>
+             <router-link :to="{name:'videoaa',params:{id:'sssss'}}">美国大片</router-link>
+              <router-link :to="{name:'videoaa',params:{id:'ddddd'}}">喜剧电影</router-link>
+              <router-view></router-view>
+         </div>
+        `
+    };
+    //一级路由
+    var yinyue ={
+        template:`
+         <div>我是一级路由音乐内容</div>
+        `
+    };
+
+    //二级路由
+    var videoaa ={
+        template:`
+         <div><h1>{{ msg }}</h1></div>
+        `,
+        data(){
+            return{
+                msg:''
+            }
+        },
+        //生命周期钩子函数在组件加载时
+        created(){
+           this.msg='sssss'
+        },
+        //通过 watch 监听 vueroute 对象， to 是切换的当前路由对象，form 是上一个的路由对象
+        watch:{
+            '$route'(to,form){
+                console.log(to)
+                console.log(form)
+                this.msg=to.params.id;
+            }
+        }
+    };
+
+    var router = new VueRouter({
+        routes:[
+            {
+                path:'/video',
+                name:'video',
+                component:video,
+                children:[
+                    {
+                        path:'/video/:id',
+                        name:'videoaa',
+                        component:videoaa
+                    }
+                ]
+            },
+            {
+                path:'/yinyue',
+                name:'yinyue',
+                component:yinyue,
+                children:[
+
+                ]
+            }
+        ]
+    });
+
+
+    var opp={
+        template: `<div>
+            <router-link :to="{name:'video'}">电影</router-link>
+            <router-link :to="{name:'yinyue'}">音乐</router-link>
+            <router-view></router-view>
+                    </div>`
+    };
+
+    new Vue({
+        el:'#app',
+        router:router,
+        template:`<div>
+                    <opp></opp>
+                   </div>`,
+        components:{
+            opp
+        }
+    })
+</script>
+</body>
+</html>

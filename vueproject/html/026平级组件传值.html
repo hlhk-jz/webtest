@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         * 案例：有 A B C 三个组件，我们通过点击事件把 A B 中的数据传到 C 组件中
+         * 1. 创建组件
+         * 2. 我们可以通过 $imet绑定  和 $on触发 来进行传值,注意的是这两个方法是绑定
+         *    在公共实例中的，绑定最大的实例是 Vue ,首先我们 new 一个 Vue，然后用它
+         *    的对象来调用 $imet 和 $on
+         */
+    </script>
+</head>
+<body>
+     <div id="app"></div>
+     <script src="../js/vue.min.js"></script>
+     <script>
+         //创建公共实例
+         var Evnt=new Vue();
+
+         var aaa={
+             template:`
+             <div>
+             <h1>你好我是AAA组件</h1><br/>
+             <button @click="sent">点击A向C传数据</button>
+</div>
+             `,
+             data(){
+                 return{
+                     as:'你好我是a组件的数据'
+                 }
+             },
+             methods:{
+                 sent:function () {
+                     console.log(this)
+                     //$emit(x,()) 参数1是名字，参数2是传递的数据
+                     Evnt.$emit('a-as',this.as)
+                 }
+             }
+         }
+
+         var bbb={
+             template:`
+             <div>
+                 <h1>你好我是BBB组件</h1><br/>
+                 <button @click="sent">点击B向C传数据</button>
+           </div>`,
+             data(){
+                 return{
+                     bs:'我是b组件的内容'
+                 }
+             },
+             methods: {
+                 sent:function () {
+                     console.log(this)
+                     Evnt.$emit('b-bs',this.bs)
+                 }
+             }
+         }
+
+         var ccc={
+             template:`
+             <div>
+             <h1>你好我是CCC组件</h1><br/>
+             <h3>A组件传递来的数据为{{ ass }}</h3><br/>
+             <h3>B组件传递来的数据为{{ bss }}</h3><br/>
+</div>
+             `,
+             data(){
+                 return{
+                     ass:'',
+                     bss:''
+                 }
+             },
+             //钩子函数在dom渲染之后就挂载起来
+             mounted(){
+                 //$on(x,()) 参数1是接收的名字，参数2是一个回调函数,接收a组件的数据
+                 Evnt.$on('a-as',(as)=>{
+                     this.ass=as;
+                 });
+                 //接收b组件的数据
+                 Evnt.$on('b-bs',(bs)=>{
+                     this.bss=bs;
+                 })
+             }
+         }
+
+         var sky={
+             template: `<div>
+    <aaa></aaa>
+    <bbb></bbb>
+    <ccc></ccc>
+</div>`,
+             components: {
+                 aaa,
+                 bbb,
+                 ccc
+             }
+         }
+         new Vue({
+             el:'#app',
+             template:`<div>
+           <sky></sky>
+</div>`,
+             components:{
+                 sky
+             }
+         })
+     </script>
+</body>
+</html>

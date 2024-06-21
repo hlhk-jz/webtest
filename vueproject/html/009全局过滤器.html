@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app"></div>
+<script src="../js/vue.min.js"></script>
+<script>
+    //全局过滤器定义,参数1是全局过滤器的名称，参数2是具体的操作
+    //使用和普通过滤器差不多都是通过管道符来调用，也可以传值
+    Vue.filter('filetershow',function (value) {
+        return value.split('').reverse().join('');
+    })
+
+
+    var show={
+        template: `<div>
+      <input type="text" name="ms" v-model="ms"/>
+      <h1>{{ ms | fil}}</h1>
+      <h2>{{ mss|filetershow}}</h2>  //这就把'nihaoa' 通过过滤器中的方法反转了
+</div>`,
+        data(){
+            return{
+                 ms:0,
+                mss:'nihaoa'
+            }
+        },
+        filters:{
+            fil:function (value) {
+                return '$'+value
+            }
+        }
+    }
+    new Vue({
+        el:"#app",
+        template:`<div>
+      <show/>
+</div>`,
+        data(){
+            return{
+
+            }
+        },
+        components:{
+            show
+        }
+    })
+</script>
+</body>
+</html>

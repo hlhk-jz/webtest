@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Title</title>
+    <script>
+  /*    beforeCreate   在创建之前，通常做一些加载的功能
+        created        在创建之后
+
+        beforeMount    装载DOM之前
+        mounted        装载DOM之后
+
+        beforeUpdate   在DOM中的数据更新之前，改变之前调用这个钩子函数
+        updated        在DOM中的数据改变之后调用
+
+        beforeDestroy  在组件销毁之前调用
+        destroyed      在组件销毁之后调用
+
+        //这两个方法组件的激活与停用
+        activated      被激活了，因为组件的销毁和创建会导致浪费系统资源，所以出现了activated和deactivated
+        deactivated    被停用了
+
+
+        */
+    </script>
+</head>
+<body>
+    <div id="app">
+        <nba></nba>
+    </div>
+      <script src="../js/vue.min.js"></script>
+      <script>
+
+
+          //子组件，我们在这里测试一个个的函数
+          var test={
+              template:`<div>
+              {{ msg }}
+              <button @click="show">点击改变msg数据</button>
+</div>`,
+              data(){
+                  return{
+                      msg:"qq"
+                  }
+              },
+              methods:{
+                show:function () {
+                    this.msg="bbbbbbbbbbbbbbbbbbbbb"
+                }
+              },
+
+              // 组件创建之前，是拿不到 msg 的，会显示 undifind
+              beforeCreate:function () {
+                    console.log("生命周期之前"+this.msg)
+              },
+              // 这个可以正常打印，组件创建之后就会调用这个方法，我们可以用这个方法操作后端的数据
+              // 然后数据就会相应视图，比如我们可以发起 ajax 请求，去后端获取数据的操作
+              created:function () {
+                  console.log("生命周期之后"+this.msg)
+                  //页面就会显示 aaaaaaaaaaaaaaaaaaa 就不会显示 qq了，因为我们在这里改变了数据，就影响了视图
+                  this.msg="aaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+
+
+              //挂载数据到DOM之前会调用这个方法,我们通过button按钮来测试
+              beforeMount:function () {
+                      console.log(document.getElementById("app"))
+              },
+              //组挂载数据到DOM之后会调用这个方法，我们在这个方法里面操作DOM,因为组件都已经挂载好了
+              /**
+               * 补充在DOM元素都加载后的方法中我们可以通过 ref  this.$refs.xx 获取DOM元素，比如
+               * 获取 button,input 等元素，方法是我们在元素上添加 ref="xx"  然后在这个方法中就
+               * 可以通过 this.$refs.xx 来获取到这个元素，可以对多个元素使用 ref 只要值不一样
+               * 即可
+               */
+              mounted:function () {
+                  console.log(document.getElementById("app"))
+              },
+
+
+              //DOM数据改变之前调用,我们可以用它来获取在数据更新之前的DOM，也可以做一些别的操作
+              beforeUpdate:function () {
+                  console.log(document.getElementById("app").innerHTML)
+              },
+              //DOM数据改变之后调用，可以获取最新的DOM，也可以在更新之后做一些事情
+              updated:function () {
+                  console.log(document.getElementById("app").innerHTML)
+              },
+
+              //测试销毁和创建需要通过 v-if 来测试，我们在父组件中对 test 组件进行 v-if
+              //在组件销毁之前调用
+              beforeDestroy:function () {
+                  console.log("beforeDestroy")
+              },
+
+              //在组件销毁之后调用
+              destroyed:function () {
+                  console.log("destroyed")
+              },
+
+              //组件的激活和停用
+              activated:function () {
+                  console.log("zu jian bei ji huo le")
+              },
+              deactivated:function () {
+                  console.log("zu jian bei ting yong le")
+              }
+          }
+
+
+
+
+
+
+
+          //父组件
+          /**  <keep-alive> 把子组件包裹起来，把子组件的 DOM 状态保存到内存
+           *   vue 的内置组件<keep-alive></keep-alive>把组件保存起来，防止
+           *  重复渲染 DOM ，节省资源，使用方式就是把路由菜单组件放在这个标签中
+           *  这样组件的创建和销毁就不会在重新的渲染DOM了
+           */
+          var nba={
+              template:`<div>
+      <keep-alive>
+       <test v-if="isShow"></test>
+     </keep-alive>
+      <button @click="isShow=!isShow">isshow</button>
+</div>`,
+              data(){
+                return{
+                    isShow:true
+                }
+              },
+              components: {
+                  test
+              }
+          }
+
+          new Vue({
+              el:'#app',
+              /*template:`<div>
+     <nba></nba>
+</div>`,*/
+              data(){
+                  return{
+                  }
+              },
+              components:{
+                  nba
+              }
+          })
+      </script>
+</body>
+</html>

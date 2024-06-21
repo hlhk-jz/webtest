@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Title</title>
+</head>
+<body>
+      <div id="app"></div>
+     <script src="../js/vue.min.js"></script>
+    <script>
+        var dfs={
+            template:`<div></div>`
+        }
+        Vue.component('wang',dfs);
+
+
+
+        var cxf={
+            template: `
+             <div>
+             <button ref="sss">我是按钮</button>
+             <wang ref="sss2">quan</wang>
+</div>
+            `,
+
+            /**
+             * 补充在DOM元素都加载后的方法中我们可以通过 ref  this.$refs.xx 原生js DOM元素，比如
+             * 获取 button,input 等元素，方法是我们在元素上添加 ref="xx"  然后在这个方法中就
+             * 可以通过 this.$refs.xx 来获取到这个元素，可以对多个元素使用 ref 只要值不一样
+             * 即可，如果是给组件设置ref获取到的是组件对象
+             * 不建议通过它来获取元素，因为用了它和原生js差不多效果了
+             */
+            mounted:function () {
+                console.log(this.$refs.sss);
+                console.log(this.$refs.sss2);
+            }
+        }
+
+        new Vue({
+            el:'#app',
+            template:`<div>
+                             <cxf></cxf>
+                       </div>`,
+            components:{
+                cxf
+            }
+        })
+    </script>
+</body>
+</html>

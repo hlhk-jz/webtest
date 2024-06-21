@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<div id="app">
+			<h1>{{dd}}</h1>
+			<!--插表达式，注意三个大括号不能连续写，否则解析不了，需要有空格-->
+			<h4>{{ {name:'tom'} }}</h4> 
+			<p>{{cc}}</p>
+			<p>{{2==2}}</p>
+			<!--插入 三元运算符-->
+			<p>{{1>2?'真的':'假的'}}</p>
+		</div>
+		
+		
+		<!--引入 vue.js-->
+		<script  type="text/javascript" src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			//创建实例化vue对象
+			//插值模板语法 {{}} 插字符串，作用将 dd 的内容渲染到 div中,只要在括号中声明了定义的属性就会显示
+			//注意：如果有模板语法插值就会优先使用模板中的属性来渲染，如果没有就会到页面中寻找
+			new Vue({
+				//绑定根元素
+				el:"#app",
+				//使用模板来渲染元素
+				template:'',  //<div>{{dd}}</div>就会优先使用这里的，而 h1 中的 dd 就不会使用，没有h1效果
+				//在data后面如果没有匿名函数默认是返回一个对象的，但是在匿名函数中一定要有 return
+				data:function(){
+					return{
+						dd:'大家学习vue',
+						//插 布尔表达式
+						cc: 2==2
+					}
+				}
+				
+			})
+		</script>
+	</body>
+</html>

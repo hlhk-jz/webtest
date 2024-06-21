@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			.aid{
+				color: red;
+			}
+			.active{
+				color: green;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="../js/vue.min.js"></script>
+		<div id="app">
+
+		</div>
+		<script>
+
+			 // 注意的是 v-bind 后面的参数一定是 data 中声明的属性值
+
+		/*	new Vue({
+				el:'#app',
+				template:`<div>
+				<p v-bind:class="msg">你好</p>
+				</div>`,
+				data:function(){
+					return{
+						msg:"aid"
+					}
+				}
+			});*/
+
+			  /*
+                            使用按钮控制变换颜色
+                            控制 isRed的真假值即可，取反，用if else也可以实现切换，使用点击绑定方法来进行If else判断，
+                            注意的是在 vue中定义的方法要在 methods中,/*<button v-on:click="isRed=!isRed">切换颜色</button>
+                          */
+				new Vue({
+				el:'#app',
+				template:`<div>
+				<p v-bind:class="{aid:isRed}">你好</p>
+				<button v-on:click="show">切换颜色</button>
+				</div>`,
+				data(){
+					return{
+						isRed:true
+					}
+				},
+				methods:{
+					show(){
+						/!*console.log(this);*!/
+						this.isRed=!this.isRed;
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

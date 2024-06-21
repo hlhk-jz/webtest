@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			
+			.main{
+				width: 100%;
+			}
+			.head{
+				width: 100%;
+				height: 300px;
+				background-color: red;
+			}
+			.main2{
+				width: 100%;
+				height: 800px;
+			}
+			.main2 .sade{
+				width: 30%;
+				height: 100%;
+				background-color: green;
+				float: left;
+			}
+			.main2 .content{
+				width: 70%;
+				height: 100%;
+				background-color: hotpink;
+				float: right;
+			}
+			
+			.mvse{
+				display: inline-block;
+			    line-height: 1;
+			    white-space: nowrap;
+			    cursor: pointer;
+			    background: #fff;
+			    border: 1px solid #dcdfe6;
+			    color: #606266;
+			    -webkit-appearance: none;
+			    text-align: center;
+			    box-sizing: border-box;
+			    outline: none;
+			    margin: 0;
+			    transition: .1s;
+			    font-weight: 500;
+			    -moz-user-select: none;
+			    -webkit-user-select: none;
+			    -ms-user-select: none;
+			    padding: 12px 20px;
+			    font-size: 14px;
+			    border-radius: 4px;
+			}
+			
+			#primary{
+				    color: #fff;
+				    background-color: #409eff;
+				    border-color: #409eff;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			
+		</div>
+		<!--
+			
+			子组件通过事件操作父组件中的事件：
+			        1.首先在想要操作的子组件中定义个按钮然后绑定个事件，注意绑定事件后要在methods中定义这个方法，否则无效
+			        2.在父组件中的添加了按钮的子组件中绑定一个自定义的事件,同样也需要在当前的组件中声明一下事件触发的方法
+			        3.在子组件的方法中触发父组件中在子组件中自定义的事件名字，在子组件中通过 this.$emit("父组件中自定义事件的名称")
+			        3.最后在父组件中的自定义事件触发的方法里操控控制字大小的属性让它加x
+			注意：如果在子组件中引用了全局的button按钮，然后想要在子组件中的按钮上添加事件需要使用 v-on:click.native="add"
+			       来绑定事件和方法，使用 native 的作用是使用原生的button事件
+		-->
+		<script src="../js/vue.min.js"></script>
+		<script>
+			
+			//全局组件定义,第一个参数是组件的名称,第二个参数是全局组件的样式，如果那个组件中用，挂载即可
+			Vue.component("show",{
+				template:`
+				   <div>
+				      <button class="mvse" v-bind:id="type">
+				         <slot></slot>
+				      </button>
+				   </div>
+				`,
+				props:['type']
+			})
+			
+			
+			//内容区
+			var Vcontent={
+				template:`
+				  <div class="content">
+				    <button v-on:click="shows">让字体变大</button>
+				      <ul>
+				       <li v-for = '(item,index) in posts'>
+							<h3>{{item.title}}</h3>
+							<h4>{{item.content}}</h4>
+						</li>
+				      </ul> 
+				  </div>
+				
+				`,
+				props:['posts'],
+				methods:{
+					shows(){
+						this.$emit('showj')
+					}
+				}
+			}
+			
+			
+			//侧边栏
+			var Vsade={
+				template:`
+				  <div class="sade"><show type="primary" v-on:click.native="add">添加</show>
+				  我是侧边栏</div>
+				`,
+				methods:{
+					add(){
+						alert(33)
+					}
+				}
+			}
+			
+			//局部入口组件中的 heade自定义组件
+			var Vhead={
+				template:`
+				  <div class="head">
+				  <show>登录</show>
+				  我是头部组件</div>
+				`
+			}
+			//声明局部入口组件,这个局部组件可以看成是 new 的 vue中的所有属性，除了 el 别的都可以使用
+			//注意如果是组件，那么在data中必须是 return
+			var App={
+				template:`
+				    <div class="main" v-bind:style="{fontSize:postFontSize+'em'}">
+				       <Vhead />
+				       <div class="main2" >
+				         <Vsade />
+				         <Vcontent :posts = 'posts' @showj="shea"/>
+				       </div>
+				    </div>
+				`,
+				data(){
+					return{
+						posts:[
+					{id:1,title:"我的第一篇博客",content:'天王该帝王'},
+					{id:2,title:"我的第二篇博客",content:'小鸡炖蘑菇'},
+					{id:3,title:"我的第三篇博客",content:'宝塔镇河妖'}
+					  ],
+					  
+						postFontSize:1
+					}
+				},
+				components:{
+					Vhead,
+					Vsade,
+					Vcontent
+				},
+				methods:{
+					shea(){
+						this.postFontSize+=0.1
+					}
+				}
+			};
+			
+			new Vue({
+				el:'#app',
+				template:`<App></App>`,
+				data(){
+					return{
+						
+					}
+				},
+				components:{
+					App
+				}
+			});
+		</script>
+	</body>
+</html>
